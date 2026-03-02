@@ -390,3 +390,6 @@ def page_aide(request):
 def page_cgu(request):
     """Affiche la page des Conditions Générales d'Utilisation"""
     return render(request, 'cgu.html')
+@login_required
+def menu_mobile(request):
+    return render(request, 'interim/menu_mobile.html')

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-md mx-auto p-6 pb-24">
+    <h1 class="text-3xl font-black text-gray-900 mb-8">Mon Compte</h1>
+
+    <div class="space-y-4">
+        <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm">
+            <p class="text-[10px] font-black text-gray-400 uppercase mb-4">Ma Vitrine Public</p>
+            <a href="{% url 'profil_public' user.id %}" class="flex items-center justify-between group">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-xl">👤</div>
+                    <div>
+                        <p class="font-black text-gray-800 text-sm">Voir mon CV en ligne</p>
+                        <p class="text-xs text-gray-500">Ce que les clients voient</p>
+                    </div>
+                </div>
+                <span class="text-gray-300">→</span>
+            </a>
+        </div>
+
+        <div class="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
+            <p class="text-[10px] font-black text-gray-400 uppercase p-6 pb-2">Paramètres</p>
+            
+            <a href="{% url 'modifier_profil' %}" class="flex items-center gap-4 p-6 hover:bg-gray-50 border-b border-gray-50">
+                <span class="text-xl">✏️</span>
+                <span class="font-bold text-gray-700 text-sm">Modifier ma Bio & Infos</span>
+            </a>
+
+            <a href="{% url 'aide' %}" class="flex items-center gap-4 p-6 hover:bg-gray-50 border-b border-gray-50">
+                <span class="text-xl">💡</span>
+                <span class="font-bold text-gray-700 text-sm">Aide & Support</span>
+            </a>
+
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="w-full flex items-center gap-4 p-6 hover:bg-red-50 text-red-500 transition">
+                    <span class="text-xl">🚪</span>
+                    <span class="font-bold text-sm uppercase">Se déconnecter</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="pt-6">
+            <button onclick="confirmDelete()" class="w-full py-4 text-gray-400 text-xs font-bold hover:text-red-600 transition">
+                Supprimer mon compte définitivement
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete() {
+        if (confirm("Êtes-vous sûr de vouloir supprimer votre compte Mbolo ? Cette action est irréversible.")) {
+            // Ici tu rediriges vers ta vue de suppression si elle existe
+            window.location.href = "{% url 'supprimer_compte' %}";
+        }
+    }
+</script>
+{% endblock %}

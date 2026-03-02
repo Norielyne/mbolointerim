@@ -1,15 +1,8 @@
-# interim/context_processors.py
 from .models import Message
 
-def unread_messages_count(request):
-    if request.user.is_authenticated:
-        # On compte les messages reçus par l'utilisateur qui ne sont pas encore lus
-        count = Message.objects.filter(destinataire=request.user, lu=False).count()
-        return {'unread_messages_count': count}
-    return {'unread_messages_count': 0}
 def notifications_messages(request):
     if request.user.is_authenticated:
-        # On compte les messages dont l'utilisateur est le destinataire et qui ne sont pas lus
+        # On utilise le nom exact 'nouveaux_messages_count' que ton template réclame
         count = Message.objects.filter(destinataire=request.user, lu=False).count()
-        return {'unread_messages_count': count}
-    return {'unread_messages_count': 0}
+        return {'nouveaux_messages_count': count}
+    return {'nouveaux_messages_count': 0}
