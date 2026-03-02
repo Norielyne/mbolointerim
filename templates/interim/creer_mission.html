@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto p-4 mt-6">
+    <h1 class="text-2xl font-black text-blue-900 mb-6 italic">Publier une mission.</h1>
+    
+    <form method="post" class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-xl">
+        {% csrf_token %}
+        
+        <div class="space-y-5 custom-form">
+            {% for field in form %}
+                {% if field.name == 'budget_travailleur' %}
+                    <div class="bg-blue-50 p-6 rounded-[2rem] border border-blue-100 mt-4">
+                        <label class="block text-[10px] font-black uppercase text-blue-400 mb-2 ml-2">
+                            Salaire proposé au travailleur (FCFA)
+                        </label>
+                        {{ field }}
+                        
+                        <div class="mt-4 p-4 bg-white/50 rounded-xl space-y-2">
+                            <div class="flex justify-between text-xs font-bold text-gray-500">
+                                <span>Frais de service Mbolo (10%) :</span>
+                                <span id="display-commission">0 F</span>
+                            </div>
+                            <div class="flex justify-between text-sm font-black text-blue-900 border-t pt-2">
+                                <span>TOTAL À PAYER :</span>
+                                <span id="display-total">0 F</span>
+                            </div>
+                        </div>
+                        <p class="text-[9px] text-blue-400 mt-2 ml-2 italic">
+                            Ces frais nous permettent de sécuriser la transaction et d'assurer le support.
+                        </p>
+                    </div>
+                {% else %}
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-[0.1em] text-gray-400 mb-2 ml-4">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <p class="text-red-500 text-[10px] mt-1 ml-4 font-bold">{{ field.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="w-full mt-8 bg-blue-600 text-white py-5 rounded-2xl font-black shadow-lg shadow-blue-100 hover:bg-blue-700 transition transform active:scale-95">
+            PUBLIER L'ANNONCE
+        </button>
+    </form>
+</div>
+
+<style>
+    /* Style pour les champs générés par Django */
+    .custom-form input, .custom-form textarea, .custom-form select {
+        width: 100%;
+        padding: 1rem;
+        background-color: #f9fafb;
+        border: 2px solid transparent;
+        border-radius: 1.25rem;
+        outline: none;
+        font-weight: 700;
+        transition: all 0.2s;
+    }
+    .custom-form input:focus, .custom-form textarea:focus {
+        background-color: white;
+        border-color: #3b82f6;
+    }
+    /* Style spécifique pour le champ budget (plus gros) */
+    input[name="budget_travailleur"] {
+        font-size: 1.5rem;
+        color: #1e3a8a;
+    }
+</style>
+
+<script>
+    // Script de calcul en temps réel
+    const inputBudget = document.querySelector('input[name="budget_travailleur"]');
+    const displayComm = document.getElementById('display-commission');
+    const displayTotal = document.getElementById('display-total');
+
+    if (inputBudget) {
+        inputBudget.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value) || 0;
+            const comm = Math.round(val * 0.10);
+            const total = val + comm;
+
+            displayComm.innerText = comm.toLocaleString() + ' F';
+            displayTotal.innerText = total.toLocaleString() + ' F';
+        });
+    }
+</script>
+{% endblock %}

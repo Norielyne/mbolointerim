@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto p-4 lg:p-10">
+    <a href="{% url 'liste_missions' %}" class="inline-flex items-center gap-2 text-gray-500 hover:text-blue-600 font-bold text-xs mb-8 transition">
+        ⬅️ RETOUR AUX MISSIONS
+    </a>
+
+    <div class="bg-white rounded-[3rem] p-8 lg:p-12 shadow-2xl border border-gray-50 relative overflow-hidden">
+        {% if mission.is_boosted %}
+        <div class="absolute top-0 right-0 bg-yellow-400 text-white px-8 py-2 rotate-45 translate-x-8 translate-y-4 text-[10px] font-black uppercase shadow-lg">
+            URGENT
+        </div>
+        {% endif %}
+
+        <div class="flex flex-col md:flex-row justify-between items-start gap-6 mb-10">
+            <div>
+                <span class="px-4 py-1.5 bg-blue-50 text-blue-600 rounded-full text-[10px] font-black uppercase border border-blue-100 mb-4 inline-block">
+                    {{ mission.get_categorie_display }}
+                </span>
+                <h1 class="text-4xl font-black text-gray-900 leading-tight">{{ mission.titre }}</h1>
+                <p class="text-gray-400 mt-2 font-bold uppercase tracking-widest text-xs">📍 {{ mission.ville }} • {{ mission.quartier }}</p>
+            </div>
+            
+            <div class="bg-blue-900 text-white p-6 rounded-[2rem] text-center min-w-[180px] shadow-xl shadow-blue-100">
+                <p class="text-[10px] font-black uppercase opacity-70 mb-1">Gain Net</p>
+                <p class="text-3xl font-black">{{ mission.prix_net_travailleur }} <span class="text-sm">FCFA</span></p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 border-t border-gray-100 pt-10">
+            <div class="md:col-span-2">
+                <h3 class="text-xl font-black text-gray-800 mb-4">Description de la mission</h3>
+                <p class="text-gray-600 leading-relaxed whitespace-pre-line">{{ mission.description }}</p>
+                
+                <div class="mt-8 flex gap-4">
+                    <div class="bg-gray-50 p-4 rounded-2xl flex-1">
+                        <p class="text-[9px] font-black text-gray-400 uppercase mb-1">📅 Date</p>
+                        <p class="text-sm font-bold text-gray-700">{{ mission.date_mission|default:"À convenir" }}</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-2xl flex-1">
+                        <p class="text-[9px] font-black text-gray-400 uppercase mb-1">👥 Places</p>
+                        <p class="text-sm font-bold text-gray-700">{{ mission.nombre_places }} travailleur(s)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-gray-50 p-6 rounded-[2rem] border border-gray-100">
+                    <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-4">Détails du paiement</p>
+                    
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-gray-500 italic">Prix brut mission</span>
+                            <span class="font-bold text-gray-600">{{ mission.prix }} F</span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-gray-500 italic">Frais Mbolo (10%)</span>
+                            <span class="font-bold text-red-400">- {{ mission.commission_mbolo }} F</span>
+                        </div>
+                        <div class="border-t border-dashed border-gray-200 pt-3 flex justify-between items-center">
+                            <span class="font-black text-gray-900 text-xs">VOTRE GAIN</span>
+                            <div class="text-right">
+                                <span class="text-xl font-black text-green-600">{{ mission.prix_net_travailleur }}</span>
+                                <span class="text-[10px] font-black text-green-600">FCFA</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Posté par</h4>
+                    <div class="flex items-center gap-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-xl shadow-inner">
+                            {% if mission.auteur.photo %}
+                                <img src="{{ mission.auteur.photo.url }}" class="w-full h-full rounded-full object-cover">
+                            {% else %}
+                                👤
+                            {% endif %}
+                        </div>
+                        <div>
+                            <p class="font-black text-gray-800 text-sm">{{ mission.auteur.first_name }}</p>
+                            {% if mission.auteur.statut_verification == 'VERIFIE' %}
+                            <span class="text-[9px] bg-blue-500 text-white px-2 py-0.5 rounded-full font-black uppercase">Vérifié</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    {% if user.is_authenticated %}
+                        {% if user != mission.auteur %}
+                            <form method="post" action="{% url 'postuler_mission' mission.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="w-full bg-blue-600 text-white py-5 rounded-[1.5rem] font-black text-sm hover:bg-blue-700 hover:scale-[1.02] transition shadow-xl shadow-blue-100 uppercase tracking-wider">
+                                    🚀 Postuler maintenant
+                                </button>
+                            </form>
+                            <p class="text-[9px] text-gray-400 mt-4 text-center italic leading-tight">
+                                En postulant, vous acceptez les conditions de service de Mbolo Intérim. 🇬🇦
+                            </p>
+                        {% else %}
+                            <a href="{% url 'gestion_mission' mission.id %}" class="block w-full text-center bg-gray-900 text-white py-5 rounded-[1.5rem] font-black text-sm hover:bg-black transition uppercase">
+                                ⚙️ Gérer mon annonce
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'login' %}" class="block w-full text-center bg-orange-500 text-white py-5 rounded-[1.5rem] font-black text-sm hover:bg-orange-600 transition uppercase">
+                            🔑 Connexion requise
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

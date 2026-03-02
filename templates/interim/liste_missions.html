@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto p-4 lg:p-10">
+    
+    <div class="mb-10 text-center md:text-left">
+        <h1 class="text-4xl font-black text-gray-900 mb-2 italic">Missions disponibles. 🇬🇦</h1>
+        <p class="text-gray-500 font-medium tracking-tight">Trouvez un job d'appoint à Libreville, Port-Gentil et partout au Gabon.</p>
+    </div>
+
+    <div class="mb-8 space-y-4">
+        <div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+            <a href="?" class="bg-blue-600 text-white px-5 py-2 rounded-full text-xs font-bold shadow-md whitespace-nowrap">Tout le Gabon</a>
+            <a href="?ville=Libreville" class="bg-white border border-gray-100 px-5 py-2 rounded-full text-xs font-bold hover:bg-blue-50 transition whitespace-nowrap">Libreville</a>
+            <a href="?ville=Port-Gentil" class="bg-white border border-gray-100 px-5 py-2 rounded-full text-xs font-bold hover:bg-blue-50 transition whitespace-nowrap">Port-Gentil</a>
+            <a href="?ville=Akanda" class="bg-white border border-gray-100 px-5 py-2 rounded-full text-xs font-bold hover:bg-blue-50 transition whitespace-nowrap">Akanda</a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for m in missions %}
+        <div class="relative group h-full">
+            <div class="h-full bg-white rounded-[2.5rem] p-7 shadow-sm border-2 transition-all duration-300 
+                {% if m.is_boosted %}
+                    border-yellow-400 bg-yellow-50 shadow-yellow-100 shadow-2xl scale-[1.02] z-10
+                {% else %}
+                    border-gray-50 hover:border-blue-200 hover:shadow-xl
+                {% endif %}">
+
+                {% if m.is_boosted %}
+                <div class="absolute -top-3 left-8 bg-yellow-400 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase animate-pulse shadow-lg">
+                    ⚡ URGENT / À LA UNE
+                </div>
+                {% endif %}
+
+                <div class="flex justify-between items-start mb-5">
+                    <span class="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-xl text-[11px] font-black uppercase flex items-center gap-2 border border-blue-100">
+                        {{ m.get_categorie_display }}
+                    </span>
+                    
+                    <div class="text-right">
+    <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-1">Salaire Net</p>
+    <div class="flex items-center justify-end gap-1">
+        <span class="text-xl font-black text-green-600">{{ m.prix_net_travailleur }}</span>
+        <span class="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded-md">FCFA</span>
+    </div>
+</div>
+                </div>
+
+                <h3 class="text-lg font-black text-gray-800 mb-2 group-hover:text-blue-600 transition">
+                    {{ m.titre }}
+                </h3>
+                <p class="text-gray-500 text-sm mb-6 line-clamp-2">
+                    {{ m.description }}
+                </p>
+                
+                <div class="flex items-center gap-3 mb-6 bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-sm overflow-hidden border-2 border-white shadow-sm">
+                        {% if m.auteur.photo %}
+                            <img src="{{ m.auteur.photo.url }}" class="object-cover w-full h-full">
+                        {% else %}
+                            👤
+                        {% endif %}
+                    </div>
+                    <div class="text-[11px]">
+                        <p class="font-black text-gray-800">
+                            {{ m.auteur.first_name }}
+                            {% if m.auteur.statut_verification == 'VERIFIE' %}
+                                <span class="text-blue-500">✅</span>
+                            {% endif %}
+                        </p>
+                        <p class="text-gray-400 font-bold uppercase tracking-tighter">📍 {{ m.ville }} • {{ m.quartier }}</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between border-t border-gray-100 pt-5 mt-auto">
+                    <div class="flex flex-col">
+                        <span class="text-[9px] text-gray-400 font-black uppercase tracking-widest">Airtel/Moov OK</span>
+                        <span class="text-[11px] text-gray-700 font-bold">Posté le {{ m.date_publication|date:"d M" }}</span>
+                    </div>
+                    <a href="{% url 'detail_mission' m.id %}" class="bg-blue-600 text-white px-6 py-3 rounded-2xl text-xs font-black hover:bg-blue-700 shadow-md transform active:scale-95 transition">
+                        VOIR LE JOB
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full py-24 text-center bg-gray-50 rounded-[3rem] border-4 border-dashed border-gray-200">
+            <p class="text-6xl mb-4">🔍</p>
+            <h3 class="text-xl font-black text-gray-800">Aucune mission trouvée</h3>
+            <a href="?" class="mt-6 inline-block bg-blue-600 text-white px-8 py-3 rounded-2xl font-black text-sm">Réinitialiser</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

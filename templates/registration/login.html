@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-16 p-8 bg-white rounded-[2.5rem] shadow-2xl border border-gray-50">
+    <div class="text-center mb-8">
+        <h2 class="text-2xl font-black text-blue-900">Bon retour !</h2>
+        <p class="text-gray-500 text-sm mt-2">Connectez-vous à votre espace Mbolo</p>
+    </div>
+    
+    <form method="post" class="space-y-5">
+        {% csrf_token %}
+        
+        <div>
+            <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 ml-4">Nom d'utilisateur</label>
+            <input type="text" name="username" required 
+                   class="w-full p-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none font-medium">
+        </div>
+
+        <div>
+            <div class="flex justify-between items-center mb-2 ml-4">
+                <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400">Mot de passe</label>
+                <a href="{% url 'password_reset' %}" class="text-[9px] font-black uppercase text-blue-500 hover:text-blue-700">
+                    Oublié ?
+                </a>
+            </div>
+            <input type="password" name="password" required 
+                   class="w-full p-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none font-medium">
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black shadow-lg hover:bg-blue-700 transition transform active:scale-95">
+            SE CONNECTER
+        </button>
+    </form>
+    
+    <div class="mt-8 pt-6 border-t border-gray-50 text-center">
+        <p class="text-sm text-gray-500">
+            Pas encore de compte ? 
+            <a href="{% url 'signup' %}" class="text-blue-600 font-black hover:underline ml-1">Inscrivez-vous</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

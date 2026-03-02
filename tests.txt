@@ -1,0 +1,43 @@
+1. Inscription et Sécurité (Le portail)
+[ ] Limite d'âge : Tente de t'inscrire avec une date de naissance indiquant moins de 18 ans. L'inscription doit être bloquée.
+
+[ ] Types de comptes : Vérifie que tu peux bien créer un compte "Travailleur" et un compte "Recruteur".
+
+[ ] Déconnexion : Vérifie que le bouton "Quitter" fonctionne sur PC et sur Mobile.
+
+2. Le Wallet (Le cœur financier)
+[ ] Rechargement : Simule un rechargement (si ton système de paiement est lié).
+
+[ ] Solde bloqué (Séquestre) : Vérifie que lorsqu'un recruteur accepte un candidat, l'argent est bien soustrait du "Solde disponible" et ajouté au "Solde bloqué".
+
+[ ] Solde insuffisant : Tente d'accepter un candidat avec un solde à 0 FCFA. Tu dois recevoir une erreur.
+
+3. Cycle de vie d'une Mission
+[ ] Publication : Crée une mission (test de la catégorie, ville, quartier, prix).
+
+[ ] Pack Entreprise : Crée une mission avec 3 places. Vérifie que le compteur de places diminue à chaque fois que tu acceptes quelqu'un.
+
+[ ] Postulation : Connecte-toi avec un autre compte pour postuler à ta propre mission.
+
+[ ] Annulation : Un travailleur doit pouvoir annuler sa demande tant qu'elle n'est pas acceptée.
+
+4. Communication et Identité
+[ ] Vérification d'identité : Soumets une photo de CNI. Vérifie dans l'Admin Django que tu peux passer le statut à "VERIFIE" et que le badge ✅ apparaît partout.
+
+[ ] Chat en temps réel : Envoie un message depuis le recruteur vers le travailleur accepté.
+
+[ ] Notifications (Point Rouge) : Vérifie que le point rouge apparaît bien sur le Dashboard du destinataire tant qu'il n'a pas lu le message.
+
+5. Visibilité et Marketing (Revenue stream)
+[ ] Le Boost (500 F) : Booste une mission depuis le dashboard recruteur. Vérifie que l'argent est débité et que l'annonce devient jaune et remonte en haut de la liste.
+
+[ ] Expiration du Boost : Vérifie (en changeant l'heure dans la base de données) que le boost disparaît après 24h.
+
+[ ] Filtres de recherche : Clique sur "Libreville" ou sur la catégorie "Bricolage". La liste doit se mettre à jour correctement.
+
+6. Fin de mission et Avis
+[ ] Validation de fin : Le recruteur clique sur "Confirmer la fin du travail". Vérifie que l'argent passe du "Solde bloqué" du recruteur au "Solde disponible" du travailleur.
+
+[ ] Système d'avis : Laisse une note et un commentaire après la mission.
+
+[ ] Profil Public : Va sur le profil du travailleur pour voir si l'émoji de catégorie, les compétences et les avis s'affichent bien.

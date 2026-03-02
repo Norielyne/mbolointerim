@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-md mx-auto py-10 px-4">
+    <div class="bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
+        <h2 class="text-2xl font-black mb-2 text-blue-900">Noter le travail</h2>
+        <p class="text-sm text-gray-500 mb-6 italic">Votre avis aide la communauté Mbolo à identifier les meilleurs ouvriers.</p>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <label class="block font-bold text-gray-700 mb-2">Note sur 5</label>
+                <select name="note" class="w-full p-4 bg-gray-50 border-none rounded-2xl font-bold text-blue-600 focus:ring-2 focus:ring-blue-500">
+                    <option value="5">⭐⭐⭐⭐⭐ - Excellent</option>
+                    <option value="4">⭐⭐⭐⭐ - Très bien</option>
+                    <option value="3">⭐⭐⭐ - Moyen</option>
+                    <option value="2">⭐⭐ - Décevant</option>
+                    <option value="1">⭐ - À éviter</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block font-bold text-gray-700 mb-2">Commentaire (optionnel)</label>
+                <textarea name="commentaire" rows="4" class="w-full p-4 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="Le travailleur a-t-il été ponctuel ? Travail soigné ?"></textarea>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black hover:bg-blue-700 transition">
+                VALIDER L'AVIS
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

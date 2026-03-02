@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-md mx-auto my-10 p-6 lg:p-10 bg-white rounded-[2.5rem] shadow-2xl border border-gray-100">
+    
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-black text-blue-600 italic tracking-tighter">Mbolo.</h1>
+        <p class="text-gray-500 font-bold mt-2 leading-tight">
+            Trouvez du travail ou recrutez au Gabon en 1 minute.
+        </p>
+    </div>
+
+    {% if form.errors %}
+        <div class="bg-red-50 border-2 border-red-200 p-4 rounded-2xl mb-6">
+            <p class="text-red-600 font-black text-xs uppercase mb-2">Oups ! Il y a des erreurs :</p>
+            <ul class="text-red-500 text-xs font-bold list-disc ml-5">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ field.label }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form method="post" id="signup-form" class="space-y-5">
+        {% csrf_token %}
+        
+        {{ form.indicatif_pays }}
+        
+        {% for field in form %}
+            {% if field.name == 'indicatif_pays' or field.name == 'accept_cgu' %}
+                {# On gère ces champs séparément plus bas #}
+            
+            {% elif field.name == 'phone' %}
+                <div class="relative">
+                    <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2 ml-4">
+                        Numéro Moov ou Airtel Money
+                    </label>
+                    <div class="flex gap-2">
+                        <div class="w-[85px] h-[56px] bg-gray-50 rounded-2xl flex items-center justify-center font-bold text-gray-500 text-sm border border-gray-100">
+                            🇬🇦 +241
+                        </div>
+                        <div class="flex-1">
+                            {{ field }}
+                        </div>
+                    </div>
+                    <div id="operator-badge" class="mt-2 ml-4 hidden">
+                        <span id="operator-name" class="text-[9px] font-black px-2 py-1 rounded-md uppercase"></span>
+                    </div>
+                    {% if field.errors %}
+                        <p class="text-red-500 text-[10px] mt-1 ml-4 font-bold">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+            {% else %}
+                <div class="relative">
+                    <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2 ml-4">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="text-red-500 text-[10px] mt-1 ml-4 font-bold">⚠️ {{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        <div class="flex items-start gap-3 px-2 mb-6 mt-4">
+            {{ form.accept_cgu }}
+            <label for="id_accept_cgu" class="text-[10px] text-gray-500 font-medium leading-tight cursor-pointer">
+                J'accepte les <a href="{% url 'cgu' %}" target="_blank" class="text-blue-600 font-black underline">conditions d'utilisation</a>, 
+                incluant la décharge de responsabilité de Mbolo en cas d'accident et les frais de service de 10%.
+            </label>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 text-white py-5 rounded-[1.5rem] font-black text-lg shadow-xl hover:bg-blue-700 transition-all transform active:scale-95">
+            CRÉER MON COMPTE
+        </button>
+    </form>
+    
+    <div class="mt-10 pt-6 border-t border-gray-100 text-center">
+        <p class="text-sm text-gray-400 font-medium">
+            Déjà un compte ? 
+            <a href="{% url 'login' %}" class="text-blue-600 font-black hover:underline ml-1">Se connecter</a>
+        </p>
+    </div>
+</div>
+
+<script>
+    const phoneInput = document.querySelector('input[name="phone"]');
+    const badge = document.getElementById('operator-badge');
+    const name = document.getElementById('operator-name');
+
+    if (phoneInput) {
+        phoneInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+            badge.classList.remove('hidden');
+            
+            if (val.startsWith('074') || val.startsWith('076') || val.startsWith('077') || val.startsWith('74') || val.startsWith('76') || val.startsWith('77')) {
+                name.innerText = '✨ Airtel Money';
+                name.className = 'text-[9px] font-black px-2 py-1 rounded-md uppercase bg-red-100 text-red-600';
+            } else if (val.startsWith('062') || val.startsWith('065') || val.startsWith('066') || val.startsWith('62') || val.startsWith('65') || val.startsWith('66')) {
+                name.innerText = '✨ Moov Money';
+                name.className = 'text-[9px] font-black px-2 py-1 rounded-md uppercase bg-yellow-100 text-yellow-700';
+            } else {
+                badge.classList.add('hidden');
+            }
+        });
+    }
+</script>
+{% endblock %}

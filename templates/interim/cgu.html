@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto my-10 p-8 bg-white rounded-[2.5rem] shadow-xl border border-gray-100">
+    <h1 class="text-3xl font-black text-blue-900 mb-8 flex items-center gap-3">
+        <span class="p-3 bg-blue-100 rounded-2xl text-2xl">⚖️</span> 
+        Conditions & Règles de Mbolo
+    </h1>
+
+    <div class="space-y-8 text-gray-700 leading-relaxed">
+        
+        <section class="bg-blue-50 p-6 rounded-3xl border border-blue-100">
+            <h2 class="text-xl font-black text-blue-800 mb-3 uppercase tracking-tight">1. Frais de Service (Commission)</h2>
+            <p class="text-sm font-medium">
+                Mbolo perçoit une commission de **10%** sur le montant total brut de chaque mission. 
+                <ul class="list-disc ml-5 mt-2 text-xs space-y-1">
+                    <li>Pour l'Entreprise : Le prix affiché lors de la création inclut les frais.</li>
+                    <li>Pour le Travailleur : Le montant affiché sur son tableau de bord est le montant net qu'il recevra.</li>
+                </ul>
+            </p>
+        </section>
+
+        <section>
+            <h2 class="text-xl font-black text-gray-900 mb-3 uppercase tracking-tight">2. Limitation de Responsabilité</h2>
+            <div class="p-5 border-l-4 border-orange-400 bg-orange-50 rounded-r-2xl">
+                <p class="text-sm">
+                    <strong>Mbolo est une plateforme de mise en relation uniquement.</strong><br><br>
+                    En cas d'accident de travail, de dommage matériel ou de litige entre le travailleur et l'entreprise :
+                </p>
+                <ul class="list-disc ml-5 mt-3 text-xs space-y-2 font-bold text-orange-900">
+                    <li>Mbolo décline toute responsabilité civile ou pénale.</li>
+                    <li>Le travailleur n'est pas un employé de Mbolo, mais un prestataire indépendant ou temporaire de l'entreprise cliente.</li>
+                    <li>Il appartient à l'entreprise de vérifier les assurances nécessaires pour les travaux à risque.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-xl font-black text-gray-900 mb-3 uppercase tracking-tight">3. Règles de Conduite</h2>
+            <div class="grid md:grid-cols-2 gap-4 text-xs">
+                <div class="p-4 bg-gray-50 rounded-2xl">
+                    <p class="font-black mb-1">✅ À FAIRE</p>
+                    <p>Arriver à l'heure, respecter les consignes de sécurité, déclarer la fin de mission sur l'application.</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-2xl">
+                    <p class="font-black mb-1 text-red-600">❌ INTERDIT</p>
+                    <p>Échanger des numéros pour contourner la plateforme, comportement irrespectueux, fausses déclarations.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-xl font-black text-gray-900 mb-3 uppercase tracking-tight">4. Sécurité des Paiements</h2>
+            <p class="text-xs">
+                L'argent est bloqué par Mbolo (Séquestre) dès le début de la mission. Il n'est libéré au travailleur qu'après validation de l'entreprise. En cas de litige, Mbolo arbitre la situation en fonction des preuves fournies dans le chat.
+            </p>
+        </section>
+    </div>
+
+    <div class="mt-10 pt-8 border-t border-gray-100 text-center">
+        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+            Dernière mise à jour : Février 2026 • Mbolo Gabon
+        </p>
+    </div>
+</div>
+{% endblock %}
