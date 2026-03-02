@@ -31,6 +31,7 @@ urlpatterns = [
     path('aide/', views.page_aide, name='aide'),
     path('conditions-generales/', views.page_cgu, name='cgu'),
     path('chats/', views.liste_chats, name='liste_chats'),
+    path('menu/', views.menu_mobile, name='menu_mobile'),
     
     # 1. Page pour demander la réinitialisation
     path('password-reset/', auth_views.PasswordResetView.as_view(template_name='registration/password_reset.html'), name='password_reset'),
