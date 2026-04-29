@@ -14,7 +14,7 @@ DEBUG = True
 # --- CONFIGURATION RÉSEAU LOCAL ---
 # On n'autorise que ton propre ordinateur
 # Autorise tout le monde pour le test
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'norielyne.pythonanywhere.com','mbolointerim.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'norielyne.pythonanywhere.com','mbolointerim.onrender.com','whitenoise.middleware.WhiteNoiseMiddleware']
 
 # On prévoit l'adresse que tu vas créer juste après
 CSRF_TRUSTED_ORIGINS = [
