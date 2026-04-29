@@ -14,7 +14,7 @@ DEBUG = True
 # --- CONFIGURATION RÉSEAU LOCAL ---
 # On n'autorise que ton propre ordinateur
 # Autorise tout le monde pour le test
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'norielyne.pythonanywhere.com','mbolointerim.onrender.com','whitenoise.middleware.WhiteNoiseMiddleware']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'norielyne.pythonanywhere.com', 'mbolointerim.onrender.com']
 
 # On prévoit l'adresse que tu vas créer juste après
 CSRF_TRUSTED_ORIGINS = [
@@ -39,6 +39,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
