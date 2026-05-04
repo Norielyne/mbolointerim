@@ -17,10 +17,12 @@ class InscriptionForm(UserCreationForm):
     email = forms.EmailField(label="Email")
     
     # Indicatif caché
-    indicatif_pays = forms.CharField(
-        initial='+241',
-        widget=forms.HiddenInput(),
-        required=False  
+    indicatif_pays = forms.ChoiceField(
+        choices=[
+            ('+241', 'Gabon (+241)'),
+            ('+224', 'Guinée (+224)'),
+        ],
+        label="Pays"
     )
     
     phone = forms.CharField(
@@ -77,8 +79,6 @@ class InscriptionForm(UserCreationForm):
                 label_text = field.label if field.label else field_name
                 field.widget.attrs.update({'placeholder': f'Votre {str(label_text).lower()}'})
 
-    def clean_indicatif_pays(self):
-        return '+241'
 
     def clean_date_naissance(self):
         date_naissance = self.cleaned_data.get('date_naissance')
@@ -92,16 +92,29 @@ class InscriptionForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         
-        # Nettoyage du téléphone
+        # --- 1. GESTION DU TÉLÉPHONE (Ton code optimisé) ---
         indicatif = self.cleaned_data.get('indicatif_pays', '+241')
         numero = self.cleaned_data.get('phone').strip().replace(" ", "")
         
         if numero.startswith('0'):
             numero = numero[1:]
-            
+        
         user.phone = f"{indicatif}{numero}"
         
-        # UTILISATION DE L'EMAIL COMME IDENTIFIANT
+        # --- 2. DÉDUCTION DU PAYS ET DE LA DEVISE ---
+        # On regarde l'indicatif pour savoir où est l'utilisateur
+        if indicatif == '+224':
+            user.pays = 'GN'
+            user.devise = 'GNF'
+        elif indicatif == '+221':
+            user.pays = 'SN'
+            user.devise = 'XAF'
+        else:
+            # Par défaut, on considère que c'est le Gabon
+            user.pays = 'GA'
+            user.devise = 'XAF'
+
+        # --- 3. IDENTIFIANTS ---
         user.username = self.cleaned_data["email"]
         user.email = self.cleaned_data["email"]
         

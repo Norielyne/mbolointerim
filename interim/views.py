@@ -221,13 +221,24 @@ def gestion_mission(request, mission_id):
     })
 @login_required
 def dashboard_view(request):
+    # 1. On récupère ou crée le portefeuille
     wallet, _ = Portefeuille.objects.get_or_create(user=request.user)
+    
+    # 2. On filtre les annonces : l'utilisateur ne voit que celles de SON PAYS
+    # On exclut aussi ses propres annonces pour qu'il ne postule pas chez lui-même
+    missions_disponibles = Mission.objects.filter(
+        pays=request.user.pays, 
+        statut='OUVERT'
+    ).exclude(auteur=request.user).order_by('-date_creation')
+
+    # 3. Tes données existantes (ne changent pas)
     mes_postulations = Candidature.objects.filter(travailleur=request.user).select_related('mission')
     mes_annonces = Mission.objects.filter(auteur=request.user).order_by('-date_creation')
     nouveaux_messages = Message.objects.filter(destinataire=request.user, lu=False).count()
     
     return render(request, 'interim/dashboard.html', {
         'wallet': wallet,
+        'missions_disponibles': missions_disponibles, # <-- On ajoute ça pour la liste
         'mes_postulations': mes_postulations,
         'mes_annonces': mes_annonces,
         'nouveaux_messages': nouveaux_messages

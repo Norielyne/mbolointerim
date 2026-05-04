@@ -54,6 +54,21 @@ class User(AbstractUser):
         ('VERIFIE', 'Profil Vérifié ✅'),
         ('REJETE', 'Pièce rejetée'),
     ]
+    PAYS_CHOICES = [
+        ('GA', 'Gabon 🇬🇦'),
+        ('GN', 'Guinée 🇬🇳'),
+        ('CI', "Côte d'Ivoire 🇨🇮"),
+    ]
+    
+    DEVISE_CHOICES = [
+        ('XAF', 'FCFA (XAF)'),
+        ('GNF', 'FG (GNF)'),
+    ]
+
+    USER_TYPE_CHOICES = (
+        ('PARTICULIER', 'Particulier (Travailleur & Petit Recruteur)'),
+        ('ENTREPRISE', 'Entreprise'),
+    )
 
     # --- CHAMPS PRINCIPAUX ---
     email = models.EmailField(unique=True, verbose_name="Adresse email")
@@ -68,7 +83,7 @@ class User(AbstractUser):
 
     # --- TES AUTRES CHAMPS ---
     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='PARTICULIER')
-    phone = models.CharField(max_length=15, verbose_name="Numéro Mobile Money")
+    phone = models.CharField(max_length=15, verbose_name="Numéro de Téléphone")
     ville = models.CharField(max_length=100, default="Libreville")
     photo = models.ImageField(upload_to='profiles/', null=True, blank=True)
     bio = models.TextField(max_length=500, blank=True)
@@ -85,9 +100,11 @@ class User(AbstractUser):
     fichier_piece_identite = models.FileField(upload_to='identite/', blank=True, null=True)
     statut_verification = models.CharField(max_length=20, choices=STATUT_VERIF, default='NON_VERIFIE')
     date_soumission_verif = models.DateTimeField(null=True, blank=True)
+    pays = models.CharField(max_length=2, choices=PAYS_CHOICES, default='GA')
+    devise = models.CharField(max_length=3, choices=DEVISE_CHOICES, default='XAF')
 
     def __str__(self):
-        return self.email
+        return f"{self.email} ({self.get_pays_display()})"
 
 
     def note_moyenne(self):
@@ -96,6 +113,31 @@ class User(AbstractUser):
             total = sum([a.note for a in avis])
             return round(total / avis.count(), 1)
         return "Nouveau"
+    @property
+    def operateur_mobile(self):
+        """Identifie l'opérateur selon le numéro guinéen ou gabonais"""
+        num = self.phone
+        
+        # --- LOGIQUE GUINÉE (+224) ---
+        if num.startswith('+224'):
+            prefixe = num[4:6] # On prend les deux chiffres après +224
+            if prefixe in ['60', '61', '62']:
+                return "Orange Money"
+            elif prefixe in ['65', '66']:
+                return "MTN MoMo"
+            elif prefixe == '63':
+                return "Cellcom"
+        
+        # --- LOGIQUE GABON (+241) ---
+        elif num.startswith('+241'):
+            # Au Gabon, 74/77/04/07 c'est Airtel, 62/66/02/06 c'est Moov
+            prefixe = num[4:6]
+            if prefixe in ['74', '77', '04', '07']:
+                return "Airtel Money"
+            elif prefixe in ['62', '66', '02', '06']:
+                return "Moov Money"
+                
+        return "Mobile Money"
     
 
 # 2. MISSIONS
@@ -119,6 +161,7 @@ class Mission(models.Model):
     auteur = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mes_missions')
     titre = models.CharField(max_length=100)
     description = models.TextField()
+    pays = models.CharField(max_length=2, choices=User.PAYS_CHOICES, default='GA')
     ville = models.CharField(max_length=50, default="Libreville")
     quartier = models.CharField(max_length=50, blank=True)
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='OUVERT')
@@ -144,7 +187,12 @@ class Mission(models.Model):
     )
 
     def __str__(self):
-        return f"{self.titre} - {self.prix} FCFA"
+        return f"{self.titre} - {self.prix} {self.auteur.devise}"
+    
+    @property
+    def devise_mission(self):
+        """Retourne la devise de l'auteur de la mission"""
+        return self.auteur.devise
 
     # Petite fonction pour l'icône dans la liste des missions
     def get_icon(self):
